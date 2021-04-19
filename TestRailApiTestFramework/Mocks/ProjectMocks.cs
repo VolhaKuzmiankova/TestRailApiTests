@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using TestRail.Assertion;
 using TestRail.Factories;
 
 namespace TestRail.Mocks
@@ -9,7 +10,7 @@ namespace TestRail.Mocks
         public static IEnumerable<object[]> ProjectIncorrectValues()
         {
             var incorrectId = 1;
-            var message = "Field :project_id is not a valid or accessible project.";
+            var message = ErrorMessageConstants.IncorrectProjectIdMessage;
 
             return new List<object[]>()
             {
@@ -25,7 +26,7 @@ namespace TestRail.Mocks
         {
             var missingName = ProjectFactory.GetProjectModel();
             missingName.Name = null;
-            var missingNameMessage = "Field :name is a required field.";
+            var missingNameMessage = ErrorMessageConstants.MissingNameMessage;
             var serializeMissingName = JsonConvert.SerializeObject(missingName);
 
 

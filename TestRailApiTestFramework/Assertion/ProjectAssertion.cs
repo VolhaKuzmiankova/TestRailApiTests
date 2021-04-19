@@ -12,6 +12,7 @@ namespace TestRail.Assertion
             actual.Announcement.Should().Be(expected.Announcement);
             actual.ShowAnnouncement.Should().Be(expected.ShowAnnouncement);
             actual.IsCompleted.Should().Be(expected.IsCompleted);
+            actual.Url.Should().StartWith(actual.Url);
             actual.Url.Should().EndWith(actual.Id.ToString());
         }
     }

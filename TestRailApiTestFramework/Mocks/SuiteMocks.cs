@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TestRail.Assertion;
 
 namespace TestRail.Mocks
 {
@@ -7,7 +8,7 @@ namespace TestRail.Mocks
         public static IEnumerable<object[]> IncorrectValues()
         {
             var incorrectId = 3;
-            var message = "Field :suite_id is not a valid test suite.";
+            var message = ErrorMessageConstants.IncorrectSuiteIdMessage;
 
             return new List<object[]>()
             {

@@ -16,7 +16,7 @@ namespace TestRail.Factories
             };
         }
 
-        public static SuiteResponse GetSuiteResponse(CreateSuiteModel createSuiteModel)
+        public static SuiteResponse SuiteResponseModel(CreateSuiteModel createSuiteModel)
         {
             return new SuiteResponse()
             {
