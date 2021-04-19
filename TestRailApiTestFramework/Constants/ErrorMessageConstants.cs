@@ -1,4 +1,4 @@
-namespace TestRail.Assertion
+namespace TestRail.Constants
 {
     public static class ErrorMessageConstants
     {
@@ -6,5 +6,6 @@ namespace TestRail.Assertion
         public const string IncorrectProjectIdMessage = "Field :project_id is not a valid or accessible project.";
         public const string AuthenticationFailedMessage = "Authentication failed: invalid or missing user/password or session cookie.";
         public const string MissingNameMessage = "Field :name is a required field.";
+        public const string IncorrectNameMessage = "Field :name is too long (250 characters at most).";
     }
 }

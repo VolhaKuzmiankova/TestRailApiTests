@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Allure.Xunit.Attributes;
 using FluentAssertions;
 using TestRail.Assertion;
+using TestRail.Constants;
 using TestRail.Extension;
 using TestRail.Factories;
 using TestRail.Mocks;
@@ -55,9 +56,9 @@ namespace TestRail.Tests
                 .Be(ErrorMessageConstants.AuthenticationFailedMessage);
         }
 
-        [AllureXunitTheory(DisplayName = "POST index.php?/api/v2/add_suite/{projectId} when projectId is incorrect returns 400")]
+        [AllureXunitTheory(DisplayName = "POST index.php?/api/v2/add_suite/{projectId} when projectId has incorrect value returns 400")]
         [MemberData(nameof(ProjectMocks.ProjectIncorrectValues), MemberType = typeof(ProjectMocks))]
-        public async Task AddSuite_WhenProjectIdIsIncorrect_ShouldReturnBadRequest(int id, string message)
+        public async Task AddSuite_WhenProjectIdHasIncorrectValue_ShouldReturnBadRequest(int id, string message)
         {
             //Arrange
             SetUpAuthorization();

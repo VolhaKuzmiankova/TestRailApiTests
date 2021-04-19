@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Allure.Xunit.Attributes;
 using FluentAssertions;
 using TestRail.Assertion;
+using TestRail.Constants;
 using TestRail.Extension;
 using TestRail.Factories;
 using TestRail.Mocks;
@@ -35,7 +36,7 @@ namespace TestRail.Tests
         [AllureXunitTheory(DisplayName =
             "GET index.php?/api/v2/get_project{projectId} when projectId has incorrect value returns 400")]
         [MemberData(nameof(ProjectMocks.ProjectIncorrectValues), MemberType = typeof(ProjectMocks))]
-        public async Task GetProjectWhenFieldHasIncorrectValue_ShouldReturnBadRequest(int id, string message)
+        public async Task GetProjectWhenProjectIdHasIncorrectValue_ShouldReturnBadRequest(int id, string message)
         {
             //Arrange
             SetUpAuthorization();
@@ -49,8 +50,7 @@ namespace TestRail.Tests
             error.Message.Should().Be(message);
         }
 
-        [AllureXunit(DisplayName =
-            "GET index.php?/api/v2/get_project/{projectId} when user is unauthorized returns 401")]
+        [AllureXunit(DisplayName = "GET index.php?/api/v2/get_project/{projectId} when user is unauthorized returns 401")]
         public async Task GetProject_WhenUnauthorized_ShouldReturnUnauthorized()
         {
             //Arrange

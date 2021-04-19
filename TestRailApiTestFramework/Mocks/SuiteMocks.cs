@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using TestRail.Assertion;
+using TestRail.Constants;
 
 namespace TestRail.Mocks
 {

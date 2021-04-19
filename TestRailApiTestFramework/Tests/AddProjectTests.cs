@@ -4,6 +4,7 @@ using Allure.Xunit.Attributes;
 using FluentAssertions;
 using Newtonsoft.Json;
 using TestRail.Assertion;
+using TestRail.Constants;
 using TestRail.Extension;
 using TestRail.Factories;
 using TestRail.Mocks;
@@ -19,8 +20,7 @@ namespace TestRail.Tests
         {
         }
 
-        [AllureXunit(DisplayName =
-            "POST index.php?/api/v2/add_project when required fields have correct values returns 200")]
+        [AllureXunit(DisplayName = "POST index.php?/api/v2/add_project when required fields have correct values returns 200")]
         public async Task AddProject_WhenFieldsHaveCorrectValues_ShouldReturnOK()
         {
             //Arrange
@@ -50,8 +50,7 @@ namespace TestRail.Tests
             error.Message.Should().Be(ErrorMessageConstants.AuthenticationFailedMessage);
         }
 
-        [AllureXunitTheory(DisplayName =
-            "POST index.php?/api/v2/add_project when required field has incorrect values returns 400")]
+        [AllureXunitTheory(DisplayName = "POST index.php?/api/v2/add_project when required field has incorrect value returns 400")]
         [MemberData(nameof(ProjectMocks.ProjectMissingValues), MemberType = typeof(ProjectMocks))]
         public async Task AddProjectWhenFieldHasIncorrectValue_ShouldReturnBadRequest(
             string serializedModel, string message)
@@ -68,6 +67,23 @@ namespace TestRail.Tests
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             var error = await response.GetContentModel<Error>();
             error.Message.Should().Be(message);
+        }
+
+        [AllureXunitTheory(DisplayName = "POST index.php?/api/v2/add_project when field 'Name' has incorrect value returns 400")]
+        [MemberData(nameof(ProjectMocks.IncorrectFieldName), MemberType = typeof(ProjectMocks))]
+        public async Task AddProjectWhenNameFieldHasIncorrectValue_ShouldReturnBadRequest(string model)
+        {
+            //Arrange
+            SetUpAuthorization();
+            var projectModel = JsonConvert.DeserializeObject<CreateProjectModel>(model);
+
+            //Act
+            var response = await _projectService.AddProject(projectModel);
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            var error = await response.GetContentModel<Error>();
+            error.Message.Should().Be(ErrorMessageConstants.IncorrectNameMessage);
         }
     }
 }
