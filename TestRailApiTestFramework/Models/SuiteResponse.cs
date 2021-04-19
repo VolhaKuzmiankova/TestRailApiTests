@@ -17,5 +17,9 @@ namespace TestRail.Models
         [JsonProperty("description")] public string Description { get; set; }
 
         [JsonProperty("is_master")] public bool IsMaster { get; set; }
+
+        [JsonProperty("is_baseline")] public bool IsBaseLine { get; set; }
+        
+        [JsonProperty("completed_on")] public string CompletedOn { get; set; }
     }
 }

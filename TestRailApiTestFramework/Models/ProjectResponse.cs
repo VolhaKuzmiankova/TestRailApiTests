@@ -18,5 +18,7 @@ namespace TestRail.Models
         [JsonProperty("suite_mode")] public int SuiteMode { get; set; }
 
         [JsonProperty("url")] public string Url { get; set; }
+        
+        [JsonProperty("completed_on")] public string CompletedOn { get; set; }
     }
 }
