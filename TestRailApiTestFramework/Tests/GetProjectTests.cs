@@ -35,8 +35,8 @@ namespace TestRail.Tests
 
         [AllureXunitTheory(DisplayName =
             "GET index.php?/api/v2/get_project{projectId} when projectId has incorrect value returns 400")]
-        [MemberData(nameof(ProjectMocks.ProjectIncorrectValues), MemberType = typeof(ProjectMocks))]
-        public async Task GetProjectWhenProjectIdHasIncorrectValue_ShouldReturnBadRequest(int id, string message)
+        [MemberData(nameof(ProjectMocks.IncorrectProjectId), MemberType = typeof(ProjectMocks))]
+        public async Task GetProject_WhenProjectIdHasIncorrectValue_ShouldReturnBadRequest(string id, string message)
         {
             //Arrange
             SetUpAuthorization();
@@ -45,7 +45,7 @@ namespace TestRail.Tests
             var response = await _projectService.GetProject(id);
 
             //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
             var error = await response.GetContentModel<Error>();
             error.Message.Should().Be(message);
         }
@@ -62,7 +62,7 @@ namespace TestRail.Tests
             var response = await _projectService.GetProject(projectModel.Id);
 
             //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            response.ResponseStatusCode(HttpStatusCode.Unauthorized, "Expected Unauthorized status.");
             var error = await response.GetContentModel<Error>();
             error.Message.Should().Be(ErrorMessageConstants.AuthenticationFailedMessage);
         }

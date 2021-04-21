@@ -7,12 +7,11 @@ namespace TestRail.Factories
     {
         public static CreateProjectModel GetProjectModel()
         {
-            return new CreateProjectModel
-            {
-                Name = new Faker().Name.Random.Word(),
-                Announcement = new Faker().Lorem.Sentence(5),
-                ShowAnnouncement = true
-            };
+            return new Faker<CreateProjectModel>()
+                .RuleFor(p => p.Name, f => f.Name.FullName())
+                .RuleFor(p => p.Announcement, f => f.Lorem.Sentence(5))
+                .RuleFor(p => p.ShowAnnouncement, f => f.Random.Bool())
+                .Generate();
         }
     }
 }

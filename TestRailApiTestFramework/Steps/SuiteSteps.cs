@@ -20,6 +20,7 @@ namespace TestRail.Steps
         {
             var response = await _suiteService.AddSuite(projectId, createCreateSuiteModel);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.ResponseStatusCode(HttpStatusCode.OK, "Incorrect step when add suite");
             return await response.GetContentModel<CreateSuiteModel>();
         }
     }

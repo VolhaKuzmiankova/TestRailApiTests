@@ -1,3 +1,4 @@
+using TestRail.Constants;
 using TestRail.Models;
 
 namespace TestRail.Factories
@@ -11,7 +12,7 @@ namespace TestRail.Factories
                 Name = createProjectModel.Name,
                 Announcement = createProjectModel.Announcement,
                 ShowAnnouncement = createProjectModel.ShowAnnouncement,
-                SuiteMode = 3,
+                SuiteMode = SuiteModeConstants.SuiteModeValue,
                 IsCompleted = false
             };
         }

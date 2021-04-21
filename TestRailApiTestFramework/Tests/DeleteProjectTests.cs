@@ -19,7 +19,8 @@ namespace TestRail.Tests
         }
 
 
-        [AllureXunit(DisplayName = "POST index.php?/api/v2/delete_project{projectId} when projectId is correct returns 200")]
+        [AllureXunit(DisplayName =
+            "POST index.php?/api/v2/delete_project{projectId} when projectId is correct returns 200")]
         public async Task DeleteProject_WhenProjectIdIsCorrect_ShouldReturnOk()
         {
             //Arrange
@@ -30,12 +31,13 @@ namespace TestRail.Tests
             var response = await _projectService.Delete(projectModel.Id);
 
             //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.ResponseStatusCode(HttpStatusCode.OK, "Expected OK status.");
         }
 
-        [AllureXunitTheory(DisplayName = "POST index.php?/api/v2/delete_project{projectId} when projectId has incorrect value returns 400")]
-        [MemberData(nameof(ProjectMocks.ProjectIncorrectValues), MemberType = typeof(ProjectMocks))]
-        public async Task DeleteProject_WhenProjectIdHasIncorrectValue_ShouldReturnBadRequest(int id, string message)
+        [AllureXunitTheory(DisplayName =
+            "POST index.php?/api/v2/delete_project{projectId} when projectId has incorrect value returns 400")]
+        [MemberData(nameof(ProjectMocks.IncorrectProjectId), MemberType = typeof(ProjectMocks))]
+        public async Task DeleteProject_WhenProjectIdHasIncorrectValue_ShouldReturnBadRequest(string id, string message)
         {
             //Arrange
             SetUpAuthorization();
@@ -44,12 +46,13 @@ namespace TestRail.Tests
             var response = await _projectService.Delete(id);
 
             //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
             var error = await response.GetContentModel<Error>();
             error.Message.Should().Be(message);
         }
 
-        [AllureXunit(DisplayName = "POST index.php?/api/v2/delete_project{projectId} when user is unauthorized returns 401")]
+        [AllureXunit(DisplayName =
+            "POST index.php?/api/v2/delete_project{projectId} when user is unauthorized returns 401")]
         public async Task DeleteProject_WhenUnauthorized_ShouldReturnUnauthorized()
         {
             //Arrange
@@ -61,9 +64,29 @@ namespace TestRail.Tests
             var response = await _projectService.Delete(projectModel.Id);
 
             //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            response.ResponseStatusCode(HttpStatusCode.Unauthorized, "Expected Unauthorized status.");
             var error = await response.GetContentModel<Error>();
             error.Message.Should().Be(ErrorMessageConstants.AuthenticationFailedMessage);
+        }
+
+        [AllureXunit(DisplayName =
+            "POST index.php?/api/v2/delete_project/{projectId} when the project was deleted before returns 400 ")]
+        public async Task DeleteProject_WhenProjectWasDeleted_ShouldReturnBadRequest()
+        {
+            //Arrange
+            SetUpAuthorization();
+            var projectModel = await _projectSteps.AddProject(ProjectFactory.GetProjectModel());
+            await _projectService.Delete(projectModel.Id);
+            
+            //Act
+            var deleteResponse = await _projectService.Delete(projectModel.Id);
+            var getResponse = await _projectService.GetProject(projectModel.Id);
+            
+            // //Assert
+            deleteResponse.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status");
+            getResponse.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
+            var error = await deleteResponse.GetContentModel<Error>();
+            error.Message.Should().Be(ErrorMessageConstants.NotAValidProjectIdMessage);
         }
     }
 }

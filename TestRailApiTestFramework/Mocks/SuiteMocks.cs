@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Bogus;
 using TestRail.Constants;
 
 namespace TestRail.Mocks
@@ -7,15 +8,21 @@ namespace TestRail.Mocks
     {
         public static IEnumerable<object[]> IncorrectValues()
         {
-            var incorrectId = 3;
-            var message = ErrorMessageConstants.IncorrectSuiteIdMessage;
+            var incorrectSuiteId = new Faker().Random.Number(0);
+
+            var incorrectId = new Faker().Random.Word();
 
             return new List<object[]>()
             {
                 new object[]
                 {
                     incorrectId,
-                    message
+                    ErrorMessageConstants.NotAValidSuiteMessage
+                },
+                new object[]
+                {
+                    incorrectSuiteId,
+                    ErrorMessageConstants.IncorrectSuiteIdMessage
                 }
             };
         }

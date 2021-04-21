@@ -9,7 +9,6 @@ namespace TestRail.Client
     {
         private readonly ILogger _logger;
 
-
         public LoggingHandler(HttpMessageHandler innerHandler, ILoggerFactory loggerFactory) : base(innerHandler)
         {
             _logger = loggerFactory.CreateLogger<LoggingHandler>();

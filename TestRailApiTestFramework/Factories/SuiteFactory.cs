@@ -7,11 +7,10 @@ namespace TestRail.Factories
     {
         public static CreateSuiteModel GetSuiteModel()
         {
-            return new CreateSuiteModel
-            {
-                Name = new Faker().Name.Random.Word(),
-                Description = new Faker().Lorem.Sentence(5)
-            };
+            return new Faker<CreateSuiteModel>()
+                .RuleFor(p => p.Name, f => f.Name.FullName())
+                .RuleFor(p => p.Description, f => f.Lorem.Sentence(5))
+                .Generate();
         }
     }
 }

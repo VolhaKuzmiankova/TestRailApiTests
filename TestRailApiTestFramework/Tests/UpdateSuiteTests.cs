@@ -32,14 +32,14 @@ namespace TestRail.Tests
             var response = await _suiteService.UpdateSuite(createdSuite.Id, suiteModel);
 
             //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.ResponseStatusCode(HttpStatusCode.OK, "Expected OK status.");
             var responseSuite = await response.GetContentModel<SuiteResponse>();
             var expectedSuite = ResponseFactory.SuiteResponseModel(suiteModel);
             SuiteAssertion.AssertSuite(expectedSuite, responseSuite);
         }
 
         [AllureXunit(DisplayName = "POST index.php?/api/v2/update_suite/{suiteId} when user is unauthorized returns 401")]
-        public async Task UpdateSuiteWhenNotAuthorized_ShouldReturnUnauthorized()
+        public async Task UpdateSuite_WhenNotAuthorized_ShouldReturnUnauthorized()
         {
             //Arrange
             SetUpAuthorization();
@@ -52,14 +52,14 @@ namespace TestRail.Tests
             var response = await _suiteService.UpdateSuite(createdSuite.Id, suiteModel);
 
             //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            response.ResponseStatusCode(HttpStatusCode.Unauthorized, "Expected Unauthorized status.");
             var error = await response.GetContentModel<Error>();
             error.Message.Should().Be("Authentication failed: invalid or missing user/password or session cookie.");
         }
 
         [AllureXunitTheory(DisplayName = "POST index.php?/api/v2/update_suite/{suiteId} when suiteId has incorrect value returns 400")]
         [MemberData(nameof(SuiteMocks.IncorrectValues), MemberType = typeof(SuiteMocks))]
-        public async Task UpdateSuite_WhenSuiteIdIsIncorrect_ShouldReturnBadRequest(int id, string message)
+        public async Task UpdateSuite_WhenSuiteIdIsIncorrect_ShouldReturnBadRequest(string id, string message)
         {
             //Arrange
             SetUpAuthorization();
@@ -68,7 +68,7 @@ namespace TestRail.Tests
             //Act
             var response = await _suiteService.UpdateSuite(id, suiteModel);
             //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
             var error = await response.GetContentModel<Error>();
             error.Message.Should().Be(message);
         }

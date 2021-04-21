@@ -21,12 +21,23 @@ namespace TestRail.Services
 
         public Task<HttpResponseMessage> GetProject(int projectId)
         {
+            return GetProject(projectId.ToString());
+        }
+
+        public Task<HttpResponseMessage> GetProject(string projectId)
+        {
             return _client.GetAsync($"index.php?/api/v2/get_project/{projectId}");
         }
 
         public Task<HttpResponseMessage> Delete(int projectId)
         {
+            return Delete(projectId.ToString());
+        }
+        
+        public Task<HttpResponseMessage> Delete(string projectId)
+        {
             return _client.PostAsync($"index.php?/api/v2/delete_project/{projectId}");
         }
+        
     }
 }

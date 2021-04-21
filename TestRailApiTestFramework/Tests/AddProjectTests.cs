@@ -20,7 +20,8 @@ namespace TestRail.Tests
         {
         }
 
-        [AllureXunit(DisplayName = "POST index.php?/api/v2/add_project when required fields have correct values returns 200")]
+        [AllureXunit(DisplayName =
+            "POST index.php?/api/v2/add_project when required fields have correct values returns 200")]
         public async Task AddProject_WhenFieldsHaveCorrectValues_ShouldReturnOK()
         {
             //Arrange
@@ -31,7 +32,7 @@ namespace TestRail.Tests
             var response = await _projectService.AddProject(projectModel);
 
             //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.ResponseStatusCode(HttpStatusCode.OK, "Expected OK status.");
             var responseModel = await response.GetContentModel<ProjectResponse>();
             var expectedResponse = ResponseFactory.GetProjectResponse(projectModel);
 
@@ -39,51 +40,55 @@ namespace TestRail.Tests
         }
 
         [AllureXunit(DisplayName = "POST index.php?/api/v2/add_project when user is unauthorized returns 401")]
-        public async Task CreateProjectWhenUnAuthorized_ShouldReturnUnauthorized()
+        public async Task CreateProject_WhenUnAuthorized_ShouldReturnUnauthorized()
         {
             //Act
             var response = await _projectService.AddProject(ProjectFactory.GetProjectModel());
 
             //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            response.ResponseStatusCode(HttpStatusCode.Unauthorized, "Expected Unauthorized status.");
             var error = await response.GetContentModel<Error>();
             error.Message.Should().Be(ErrorMessageConstants.AuthenticationFailedMessage);
         }
 
-        [AllureXunitTheory(DisplayName = "POST index.php?/api/v2/add_project when required field has incorrect value returns 400")]
-        [MemberData(nameof(ProjectMocks.ProjectMissingValues), MemberType = typeof(ProjectMocks))]
-        public async Task AddProjectWhenFieldHasIncorrectValue_ShouldReturnBadRequest(
-            string serializedModel, string message)
+        [AllureXunitTheory(DisplayName =
+            "POST index.php?/api/v2/add_project when required field has incorrect value returns 400")]
+        [MemberData(nameof(ProjectMocks.ProjectIncorrectValues), MemberType = typeof(ProjectMocks))]
+        public async Task AddProject_WhenFieldHasIncorrectValue_ShouldReturnBadRequest(
+            string serializeProject, string message)
         {
             //Arrange
             SetUpAuthorization();
-            //TODO AllureXUnit can't work with structured parameters, so we serialized model to string and deserialized in test
-            var createProjectModel = JsonConvert.DeserializeObject<CreateProjectModel>(serializedModel);
+            //TODO AllureXUnit can not work with structured parameters, so we serialized model to string and deserialized in test
+            var createProjectModel = JsonConvert.DeserializeObject<CreateProjectModel>(serializeProject);
+
+            //Act
+            var response = await _projectService.AddProject(createProjectModel);
+            
+            //Assert
+            response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
+            var error = await response.GetContentModel<Error>();
+            error.Message.Should().Be(message);
+        }
+
+        [AllureXunitTheory(DisplayName =
+            "POST index.php?/api/v2/add_project when required field was missed value returns 400")]
+        [MemberData(nameof(ProjectMocks.ProjectMissingValues), MemberType = typeof(ProjectMocks))]
+        public async Task AddProject_WhenRequiredFieldWasMissed_ShouldReturnBadRequest(
+            string serializeModel)
+        {
+            //Arrange
+            SetUpAuthorization();
+            //TODO AllureXUnit can not work with structured parameters, so we serialized model to string and deserialized in test
+            var createProjectModel = JsonConvert.DeserializeObject<CreateProjectModel>(serializeModel);
 
             //Act
             var response = await _projectService.AddProject(createProjectModel);
 
             //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
             var error = await response.GetContentModel<Error>();
-            error.Message.Should().Be(message);
-        }
-
-        [AllureXunitTheory(DisplayName = "POST index.php?/api/v2/add_project when field 'Name' has incorrect value returns 400")]
-        [MemberData(nameof(ProjectMocks.IncorrectFieldName), MemberType = typeof(ProjectMocks))]
-        public async Task AddProjectWhenNameFieldHasIncorrectValue_ShouldReturnBadRequest(string model)
-        {
-            //Arrange
-            SetUpAuthorization();
-            var projectModel = JsonConvert.DeserializeObject<CreateProjectModel>(model);
-
-            //Act
-            var response = await _projectService.AddProject(projectModel);
-
-            //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            var error = await response.GetContentModel<Error>();
-            error.Message.Should().Be(ErrorMessageConstants.IncorrectNameMessage);
+            error.Message.Should().Be(ErrorMessageConstants.MissingNameMessage);
         }
     }
 }

@@ -1,6 +1,6 @@
 namespace TestRail.Constants
 {
-    public class ConstantsForNotes
+    public static class NotesValidationConstants
     {
         public const int NotesMaxLength = 250;
     }
