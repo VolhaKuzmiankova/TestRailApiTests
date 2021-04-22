@@ -1,6 +1,5 @@
 using FluentAssertions;
 using TestRail.Models;
-using static TestRail.Settings.AppSettings;
 
 namespace TestRail.Assertion
 {
@@ -17,7 +16,7 @@ namespace TestRail.Assertion
             actual.IsMaster.Should().BeFalse();
             actual.CompletedOn.Should().BeNull();
             actual.Url.Should()
-                .BeEquivalentTo($"{Configuration["Services:TestRailApp:AppUrl"]}index.php?/suites/view/{actual.Id}");
+                .BeEquivalentTo($"{Startup.AppSettings.Services.TestRailApp.AppUrl}index.php?/suites/view/{actual.Id}");
         }
     }
 }

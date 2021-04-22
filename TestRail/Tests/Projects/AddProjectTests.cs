@@ -47,7 +47,7 @@ namespace TestRail.Tests
 
             //Assert
             response.ResponseStatusCode(HttpStatusCode.Unauthorized, "Expected Unauthorized status.");
-            var error = await response.GetContentModel<Error>();
+            var error = await response.GetErrors();
             error.Message.Should().Be(ErrorMessageConstants.AuthenticationFailedMessage);
         }
 
@@ -67,7 +67,7 @@ namespace TestRail.Tests
             
             //Assert
             response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
-            var error = await response.GetContentModel<Error>();
+            var error = await response.GetErrors();
             error.Message.Should().Be(message);
         }
 
@@ -87,7 +87,7 @@ namespace TestRail.Tests
 
             //Assert
             response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
-            var error = await response.GetContentModel<Error>();
+            var error = await response.GetErrors();
             error.Message.Should().Be(ErrorMessageConstants.MissingNameMessage);
         }
     }

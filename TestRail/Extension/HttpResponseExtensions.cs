@@ -1,6 +1,8 @@
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using TestRail.Exceptions;
+using TestRail.Models;
 
 namespace TestRail.Extension
 {
@@ -14,6 +16,11 @@ namespace TestRail.Extension
             throw new StepsExceptions(
                 $"Invalid response status code. Expected to be {expectedStatusCode} but found {response.StatusCode}" +
                 $"\n{message}");
+        }
+
+        public static Task<Error> GetErrors(this HttpResponseMessage responseMessage)
+        {
+            return responseMessage.GetContentModel<Error>();
         }
     }
 }

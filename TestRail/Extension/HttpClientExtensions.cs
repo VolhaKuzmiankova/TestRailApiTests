@@ -8,12 +8,11 @@ namespace TestRail.Extension
 {
     public static class HttpClientExtensions
     {
-        private static async Task<T> Deserialize<T>(this HttpContent content)
+        public static async Task<T> Deserialize<T>(this HttpContent content)
         {
             var dataAsString = await content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(dataAsString);
         }
-
         public static async Task<T> GetContentModel<T>(this HttpResponseMessage response)
         {
             return await response.Content.Deserialize<T>();

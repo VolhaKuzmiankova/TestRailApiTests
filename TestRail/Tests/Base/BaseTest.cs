@@ -7,7 +7,6 @@ using TestRail.Client;
 using TestRail.Services;
 using TestRail.Steps;
 using Xunit.Abstractions;
-using static TestRail.Settings.AppSettings;
 
 namespace TestRail.Tests
 {
@@ -27,23 +26,24 @@ namespace TestRail.Tests
                     .ClearProviders()
                     .AddXUnit(testOutputHelper);
             });
-            
+
             _client = new HttpClient(new LoggingHandler(new HttpClientHandler(), loggerFactory))
             {
-                BaseAddress = new Uri(Configuration["Services:TestRailApp:AppUrl"])
+                BaseAddress = new Uri(Startup.AppSettings.Services.TestRailApp.AppUrl)
             };
 
             _projectService = new ProjectService(_client);
             _projectSteps = new ProjectSteps(_projectService);
             _suiteService = new SuiteService(_client);
             _suiteSteps = new SuiteSteps(_suiteService);
+            
         }
 
         protected void SetUpAuthorization()
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Basic", Convert.ToBase64String(
-                    Encoding.UTF8.GetBytes($"{Configuration["Users:UserName"]}:{Configuration["Users:Password"]}")
+                    Encoding.UTF8.GetBytes($"{Startup.AppSettings.Users.UserName}:{Startup.AppSettings.Users.Password}")
                 )
             );
         }

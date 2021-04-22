@@ -1,7 +1,6 @@
 using FluentAssertions;
 using TestRail.Constants;
 using TestRail.Models;
-using static TestRail.Settings.AppSettings;
 
 namespace TestRail.Assertion
 {
@@ -18,7 +17,7 @@ namespace TestRail.Assertion
             actual.SuiteMode.Should().Be(SuiteModeConstants.SuiteModeValue);
             actual.Url.Should()
                 .BeEquivalentTo(
-                    $"{Configuration["Services:TestRailApp:AppUrl"]}index.php?/projects/overview/{actual.Id}");
+                    $"{Startup.AppSettings.Services.TestRailApp.AppUrl}index.php?/projects/overview/{actual.Id}");
         }
     }
 }

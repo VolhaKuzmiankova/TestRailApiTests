@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Allure.Xunit.Attributes;
 using FluentAssertions;
 using TestRail.Assertion;
+using TestRail.Constants;
 using TestRail.Extension;
 using TestRail.Factories;
 using TestRail.Mocks;
@@ -53,8 +54,8 @@ namespace TestRail.Tests
 
             //Assert
             response.ResponseStatusCode(HttpStatusCode.Unauthorized, "Expected Unauthorized status.");
-            var error = await response.GetContentModel<Error>();
-            error.Message.Should().Be("Authentication failed: invalid or missing user/password or session cookie.");
+            var error = await response.GetErrors();
+            error.Message.Should().Be(ErrorMessageConstants.AuthenticationFailedMessage);
         }
 
         [AllureXunitTheory(DisplayName = "POST index.php?/api/v2/update_suite/{suiteId} when suiteId has incorrect value returns 400")]
@@ -69,7 +70,7 @@ namespace TestRail.Tests
             var response = await _suiteService.UpdateSuite(id, suiteModel);
             //Assert
             response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
-            var error = await response.GetContentModel<Error>();
+            var error = await response.GetErrors();
             error.Message.Should().Be(message);
         }
     }
