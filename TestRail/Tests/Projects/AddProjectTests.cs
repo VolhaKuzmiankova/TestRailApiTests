@@ -1,7 +1,6 @@
 using System.Net;
 using System.Threading.Tasks;
 using Allure.Xunit.Attributes;
-using FluentAssertions;
 using Newtonsoft.Json;
 using TestRail.Assertion;
 using TestRail.Constants;
@@ -34,7 +33,7 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.OK, "Expected OK status.");
             var responseModel = await response.GetContentModel<ProjectResponse>();
-            var expectedResponse = ResponseFactory.GetProjectResponse(projectModel);
+            var expectedResponse = ProjectResponseFactory.GetProjectResponse(projectModel);
 
             ProjectAssertion.AssertProject(expectedResponse, responseModel);
         }
@@ -48,7 +47,7 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.Unauthorized, "Expected Unauthorized status.");
             var error = await response.GetErrors();
-            error.Message.Should().Be(ErrorMessageConstants.AuthenticationFailedMessage);
+            ErrorAssertion.ErrorAssert(error, ErrorMessageConstants.AuthenticationFailedMessage);
         }
 
         [AllureXunitTheory(DisplayName =
@@ -68,11 +67,10 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
             var error = await response.GetErrors();
-            error.Message.Should().Be(message);
+            ErrorAssertion.ErrorAssert(error, message);
         }
 
-        [AllureXunitTheory(DisplayName =
-            "POST index.php?/api/v2/add_project when required field was missed value returns 400")]
+        [AllureXunitTheory(DisplayName = "POST index.php?/api/v2/add_project when required field was missed value returns 400")]
         [MemberData(nameof(ProjectMocks.ProjectMissingValues), MemberType = typeof(ProjectMocks))]
         public async Task AddProject_WhenRequiredFieldWasMissed_ShouldReturnBadRequest(
             string serializeModel)
@@ -88,7 +86,7 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
             var error = await response.GetErrors();
-            error.Message.Should().Be(ErrorMessageConstants.MissingNameMessage);
+            ErrorAssertion.ErrorAssert(error, ErrorMessageConstants.MissingNameMessage);
         }
     }
 }

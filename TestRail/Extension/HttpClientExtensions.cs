@@ -1,4 +1,6 @@
+using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +34,20 @@ namespace TestRail.Extension
         public static Task<HttpResponseMessage> PostAsync(this HttpClient httpClient, string url)
         {
             return httpClient.PostAsJsonAsync(url, string.Empty);
+        }
+        
+        public static void SetUpAuthorization(this HttpClient httpClient, string data )
+        {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Basic", Convert.ToBase64String(
+                    Encoding.UTF8.GetBytes(data)
+                )
+            );
+        }
+        
+        public static void ClearAuthorization (this HttpClient httpClient)
+        {
+            httpClient.DefaultRequestHeaders.Clear();
         }
     }
 }

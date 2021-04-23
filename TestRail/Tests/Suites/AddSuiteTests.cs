@@ -1,7 +1,6 @@
 using System.Net;
 using System.Threading.Tasks;
 using Allure.Xunit.Attributes;
-using FluentAssertions;
 using TestRail.Assertion;
 using TestRail.Constants;
 using TestRail.Extension;
@@ -19,8 +18,7 @@ namespace TestRail.Tests
         {
         }
 
-        [AllureXunit(DisplayName =
-            "POST index.php?/api/v2/add_suite/{projectId} when fields have correct values returns 200")]
+        [AllureXunit(DisplayName = "POST index.php?/api/v2/add_suite/{projectId} when fields have correct values returns 200")]
         public async Task AddSuite_WhenFieldsHaveCorrectValues_ShouldReturnOK_ShouldReturnOk()
         {
             //Arrange
@@ -34,12 +32,11 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.OK, "Expected OK status.");
             var responseModel = await response.GetContentModel<SuiteResponse>();
-            var expectedResponse = ResponseFactory.SuiteResponseModel(suiteModel);
+            var expectedResponse = SuiteResponseFactory.SuiteResponseModel(suiteModel);
             SuiteAssertion.AssertSuite(expectedResponse, responseModel);
         }
 
-        [AllureXunit(DisplayName =
-            "POST index.php?/api/v2/add_suite/{projectId} when user is unauthorized returns 401")]
+        [AllureXunit(DisplayName = "POST index.php?/api/v2/add_suite/{projectId} when user is unauthorized returns 401")]
         public async Task CreateProject_WhenUnAuthorized_ShouldReturnUnauthorized()
         {
             //Arrange
@@ -54,12 +51,10 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.Unauthorized, "Expected Unauthorized status.");
             var error = await response.GetErrors();
-            error.Message.Should()
-                .Be(ErrorMessageConstants.AuthenticationFailedMessage);
+            ErrorAssertion.ErrorAssert(error, ErrorMessageConstants.AuthenticationFailedMessage);
         }
 
-        [AllureXunitTheory(DisplayName =
-            "POST index.php?/api/v2/add_suite/{projectId} when projectId has incorrect value returns 400")]
+        [AllureXunitTheory(DisplayName = "POST index.php?/api/v2/add_suite/{projectId} when projectId has incorrect value returns 400")]
         [MemberData(nameof(ProjectMocks.IncorrectProjectId), MemberType = typeof(ProjectMocks))]
         public async Task AddSuite_WhenProjectIdHasIncorrectValue_ShouldReturnBadRequest(string id, string message )
         {
@@ -73,7 +68,7 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
             var error = await response.GetErrors();
-            error.Message.Should().Be(message);
+            ErrorAssertion.ErrorAssert(error, message);
         }
 
         [AllureXunit(DisplayName = "POST index.php?/api/v2/add_suite/{projectId} when project is not exist")]
@@ -90,6 +85,8 @@ namespace TestRail.Tests
             
             //Assert
             response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
+            var error = await response.GetErrors();
+            ErrorAssertion.ErrorAssert(error, ErrorMessageConstants.NotAValidProjectIdMessage);
         }
         
     }

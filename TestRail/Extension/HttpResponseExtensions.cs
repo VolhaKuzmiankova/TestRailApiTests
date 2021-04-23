@@ -14,7 +14,7 @@ namespace TestRail.Extension
         {
             if (response.StatusCode == expectedStatusCode) return;
             throw new StepsExceptions(
-                $"Invalid response status code. Expected to be {expectedStatusCode} but found {response.StatusCode}" +
+                $"Invalid response status code. Expected to be {response.StatusCode} but found {expectedStatusCode}" +
                 $"\n{message}");
         }
 

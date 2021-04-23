@@ -1,7 +1,6 @@
 using System.Net;
 using System.Threading.Tasks;
 using Allure.Xunit.Attributes;
-using FluentAssertions;
 using TestRail.Assertion;
 using TestRail.Constants;
 using TestRail.Extension;
@@ -26,8 +25,8 @@ namespace TestRail.Tests
             SetUpAuthorization();
             var project = await _projectSteps.AddProject(ProjectFactory.GetProjectModel());
             var createdSuite = await _suiteSteps.AddSuite(project.Id, SuiteFactory.GetSuiteModel());
-
             var suiteModel = SuiteFactory.GetSuiteModel();
+            var expectedSuite = SuiteResponseFactory.SuiteResponseModel(suiteModel);
 
             //Act
             var response = await _suiteService.UpdateSuite(createdSuite.Id, suiteModel);
@@ -35,7 +34,6 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.OK, "Expected OK status.");
             var responseSuite = await response.GetContentModel<SuiteResponse>();
-            var expectedSuite = ResponseFactory.SuiteResponseModel(suiteModel);
             SuiteAssertion.AssertSuite(expectedSuite, responseSuite);
         }
 
@@ -55,7 +53,7 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.Unauthorized, "Expected Unauthorized status.");
             var error = await response.GetErrors();
-            error.Message.Should().Be(ErrorMessageConstants.AuthenticationFailedMessage);
+            ErrorAssertion.ErrorAssert(error, ErrorMessageConstants.AuthenticationFailedMessage);
         }
 
         [AllureXunitTheory(DisplayName = "POST index.php?/api/v2/update_suite/{suiteId} when suiteId has incorrect value returns 400")]
@@ -71,7 +69,7 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
             var error = await response.GetErrors();
-            error.Message.Should().Be(message);
+            ErrorAssertion.ErrorAssert(error, message);
         }
     }
 }

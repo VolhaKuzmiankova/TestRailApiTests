@@ -1,9 +1,8 @@
 using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using Microsoft.Extensions.Logging;
 using TestRail.Client;
+using TestRail.Extension;
 using TestRail.Services;
 using TestRail.Steps;
 using Xunit.Abstractions;
@@ -41,16 +40,13 @@ namespace TestRail.Tests
 
         protected void SetUpAuthorization()
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Basic", Convert.ToBase64String(
-                    Encoding.UTF8.GetBytes($"{Startup.AppSettings.Users.UserName}:{Startup.AppSettings.Users.Password}")
-                )
-            );
+            var data = $"{Startup.AppSettings.Users.UserName}:{Startup.AppSettings.Users.Password}";
+            _client.SetUpAuthorization(data);
         }
 
         protected void ClearAuthorization()
         {
-            _client.DefaultRequestHeaders.Clear();
+            _client.ClearAuthorization();
         }
     }
 }

@@ -1,13 +1,11 @@
 using System.Net;
 using System.Threading.Tasks;
 using Allure.Xunit.Attributes;
-using FluentAssertions;
 using TestRail.Assertion;
 using TestRail.Constants;
 using TestRail.Extension;
 using TestRail.Factories;
 using TestRail.Mocks;
-using TestRail.Models;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -28,13 +26,14 @@ namespace TestRail.Tests
 
             //Act
             var responseProject = await _projectSteps.GetProject(createdProject.Id);
+            var response = await _projectService.GetProject(createdProject.Id);
 
             //Assert
+            response.ResponseStatusCode(HttpStatusCode.OK, "Expected OK status.");
             ProjectAssertion.AssertProject(createdProject, responseProject);
         }
 
-        [AllureXunitTheory(DisplayName =
-            "GET index.php?/api/v2/get_project{projectId} when projectId has incorrect value returns 400")]
+        [AllureXunitTheory(DisplayName = "GET index.php?/api/v2/get_project{projectId} when projectId has incorrect value returns 400")]
         [MemberData(nameof(ProjectMocks.IncorrectProjectId), MemberType = typeof(ProjectMocks))]
         public async Task GetProject_WhenProjectIdHasIncorrectValue_ShouldReturnBadRequest(string id, string message)
         {
@@ -47,7 +46,7 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
             var error = await response.GetErrors();
-            error.Message.Should().Be(message);
+            ErrorAssertion.ErrorAssert(error, message);
         }
 
         [AllureXunit(DisplayName = "GET index.php?/api/v2/get_project/{projectId} when user is unauthorized returns 401")]
@@ -64,7 +63,7 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.Unauthorized, "Expected Unauthorized status.");
             var error = await response.GetErrors();
-            error.Message.Should().Be(ErrorMessageConstants.AuthenticationFailedMessage);
+            ErrorAssertion.ErrorAssert(error, ErrorMessageConstants.AuthenticationFailedMessage);
         }
     }
 }

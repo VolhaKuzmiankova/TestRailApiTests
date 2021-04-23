@@ -3,7 +3,7 @@ using TestRail.Models;
 
 namespace TestRail.Factories
 {
-    public static class ResponseFactory
+    public static class ProjectResponseFactory
     {
         public static ProjectResponse GetProjectResponse(CreateProjectModel createProjectModel)
         {
@@ -17,14 +17,6 @@ namespace TestRail.Factories
             };
         }
 
-        public static SuiteResponse SuiteResponseModel(CreateSuiteModel createSuiteModel)
-        {
-            return new SuiteResponse()
-            {
-                Name = createSuiteModel.Name,
-                Description = createSuiteModel.Description,
-                Id = createSuiteModel.Id
-            };
-        }
+
     }
 }

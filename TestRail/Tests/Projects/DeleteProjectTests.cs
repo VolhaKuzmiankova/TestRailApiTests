@@ -1,7 +1,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Allure.Xunit.Attributes;
-using FluentAssertions;
+using TestRail.Assertion;
 using TestRail.Constants;
 using TestRail.Extension;
 using TestRail.Factories;
@@ -45,7 +45,7 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
             var error = await response.GetErrors();
-            error.Message.Should().Be(message);
+            ErrorAssertion.ErrorAssert(error, message);
         }
 
         [AllureXunit(DisplayName = "POST index.php?/api/v2/delete_project{projectId} when user is unauthorized returns 401")]
@@ -62,7 +62,7 @@ namespace TestRail.Tests
             //Assert
             response.ResponseStatusCode(HttpStatusCode.Unauthorized, "Expected Unauthorized status.");
             var error = await response.GetErrors();
-            error.Message.Should().Be(ErrorMessageConstants.AuthenticationFailedMessage);
+            ErrorAssertion.ErrorAssert(error, ErrorMessageConstants.AuthenticationFailedMessage);
         }
 
         [AllureXunit(DisplayName = "POST index.php?/api/v2/delete_project/{projectId} when the project was deleted before returns 400 ")]
@@ -77,11 +77,11 @@ namespace TestRail.Tests
             var deleteResponse = await _projectService.Delete(projectModel.Id);
             var getResponse = await _projectService.GetProject(projectModel.Id);
 
-            // //Assert
+            //Assert
             deleteResponse.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status");
             getResponse.ResponseStatusCode(HttpStatusCode.BadRequest, "Expected BadRequest status.");
             var error = await deleteResponse.GetErrors();
-            error.Message.Should().Be(ErrorMessageConstants.NotAValidProjectIdMessage);
+            ErrorAssertion.ErrorAssert(error, ErrorMessageConstants.NotAValidProjectIdMessage);
         }
     }
 }
