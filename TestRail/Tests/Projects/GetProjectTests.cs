@@ -6,6 +6,7 @@ using TestRail.Constants;
 using TestRail.Extension;
 using TestRail.Factories;
 using TestRail.Mocks;
+using TestRail.Models;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -25,11 +26,11 @@ namespace TestRail.Tests
             var createdProject = await _projectSteps.AddProject(ProjectFactory.GetProjectModel());
 
             //Act
-            var responseProject = await _projectSteps.GetProject(createdProject.Id);
             var response = await _projectService.GetProject(createdProject.Id);
 
             //Assert
             response.ResponseStatusCode(HttpStatusCode.OK, "Expected OK status.");
+            var responseProject = await response.GetContentModel<ProjectResponse>();
             ProjectAssertion.AssertProject(createdProject, responseProject);
         }
 
