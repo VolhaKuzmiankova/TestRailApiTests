@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+
+        <IsPackable>false</IsPackable>
+
+        <RootNamespace>TestRail</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Allure.XUnit" Version="1.0.0" />
+        <PackageReference Include="Bogus" Version="33.0.2" />
+        <PackageReference Include="FluentAssertions" Version="5.10.3" />
+        <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.1.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="5.0.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+        <PackageReference Include="netfx-System.Collections.Generic.DictionaryGetOrAdd.Tests.xUnit" Version="1.1.1.1" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="xunit.core" Version="2.4.1" />
+        <PackageReference Include="Xunit.DependencyInjection" Version="7.1.0" />
+        <PackageReference Include="Xunit.DependencyInjection.Logging" Version="2.1.0" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector" Version="1.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="appsettings.json" />
+        <Content Include="appsettings.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="allureConfig.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>
